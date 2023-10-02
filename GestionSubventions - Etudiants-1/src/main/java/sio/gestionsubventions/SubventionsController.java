@@ -42,6 +42,8 @@ public class SubventionsController implements Initializable
     private TreeView tvMontantsParSecteurs;
     @FXML
     private TreeView tvMontantsParAnnees;
+    TreeItem racine;
+    TreeItem noeudSelectionne;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle)
@@ -126,46 +128,50 @@ public class SubventionsController implements Initializable
     }
 
     @FXML
-    public void btnAffecterSubventionClicked(Event event)
-    {
-        if (lvVilles.getSelectionModel().getSelectedItem() == null)
-        {
+    public void btnAffecterSubventionClicked(Event event) {
+        if (lvVilles.getSelectionModel().getSelectedItem() == null) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Choix de la ville");
             alert.setHeaderText("");
             alert.setContentText("Sélectionner une ville");
             alert.showAndWait();
-        }
-
-        else if (lvSecteurs.getSelectionModel().getSelectedItem() == null)
-        {
+        } else if (lvSecteurs.getSelectionModel().getSelectedItem() == null) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Choix du secteur");
             alert.setHeaderText("");
             alert.setContentText("Sélectionner un secteur");
             alert.showAndWait();
-        }
-        else if (txtNomStructure.getText().equals(""))
-        {
+        } else if (txtNomStructure.getText().equals("")) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Choix de la structure");
             alert.setHeaderText("");
             alert.setContentText("Saisir une structure");
             alert.showAndWait();
-        }
-        else if (txtMontant.getText().equals(""))
-        {
+        } else if (txtMontant.getText().equals("")) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Choix du montant");
             alert.setHeaderText("");
             alert.setContentText("Sélectionner un montant");
             alert.showAndWait();
+        } else {
+            if (!lesSubventions.containsKey(lvVillesStats.getSelectionModel().getSelectedItem().toString())) {
+                ArrayList mesSubventions = new ArrayList<>();
+
+                lesSubventions.put(lvVillesStats.getSelectionModel().getSelectedItem().toString(),mesSubventions);
+            }
+            Structure uneStructure = new Structure(txtNomStructure.getText(),Integer.parseInt(txtMontant.getText()));
+            lesSubventions.get(lvVillesStats.getSelectionModel().getSelectedItem().toString()).put(uneStructure.toString());
         }
     }
-
     @FXML
     public void lvVillesStatsClicked(Event event)
     {
+        Structure laStructure = new Structure(txtNomStructure.getText(), Integer.parseInt(txtMontant.getText()));
 
+        if (!lesSubventions.containsKey(lvVillesStats.getSelectionModel().getSelectedItem().toString()))
+        {
+            ArrayList<Structure> lesVillesStat = new ArrayList<>();
+            lesVillesStat.add(laStructure);
+        }
     }
 }
